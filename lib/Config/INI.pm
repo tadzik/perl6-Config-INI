@@ -3,13 +3,13 @@ use v6;
 module Config::INI;
 
 grammar INIfile {
-	token TOP       { ^ <toplevel> \n* $ } # no sections yet
-	token toplevel  { <dummyline>* <keyval> ** [ <dummyline> | \n ]+ }
-	token keyval    { \s* <key> \s* '=' \s* <value> <comment>? }
+	token TOP       { ^ <toplevel> \n* $ }
+	token toplevel  { <dummyline>* <keyval> ** <dummyline>* }
+	token keyval    { \s* <key> \s* '=' \s* <value> <dummyline> }
 	token key       { [ <![;]> \w ]+ }
 	token value     { [ <![;]> \N ]+ }
-	token comment   { ';' \N* }
-	token dummyline { \s* <comment>? \n }
+	token comment   { \s* ';' \N* \n }
+	token dummyline { [ <comment> | \n ]+ }
 }
 
 our sub parse_file (Str $file) {
