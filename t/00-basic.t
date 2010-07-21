@@ -42,4 +42,27 @@ is %b<ano>, 'ther ', '2nd key parsed ok';
 is %b<ki>, 'waliu', '3rd key parsed ok';
 is %b<asd>, 'esd', '4th key parsed ok';
 
+my $sections = Q {
+
+foo=bar
+[core]
+some=thing
+another=thing
+
+[more]
+stuff=good
+dragon=storm
+
+};
+
+my %s = Config::INI::parse($sections);
+
+ok 1, 'can parse string with sections';
+
+is %s<foo>, 'bar', 'toplevel stuff works';
+is %s<core><some>, 'thing', 'section core, 1/2';
+is %s<core><another>, 'thing', 'section core, 2/2';
+is %s<more><stuff>, 'good', 'section more, 1/2';
+is %s<more><dragon>, 'storm', 'section more, 2/2';
+
 done_testing;
