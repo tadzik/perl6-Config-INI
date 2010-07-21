@@ -4,12 +4,12 @@ module Config::INI;
 
 grammar INIfile {
 	token TOP       { ^ <toplevel> \n* $ } # no sections yet
-	token toplevel  { \n* <keyval> ** [ <dummyline> | \n ]+ }
+	token toplevel  { <dummyline>* <keyval> ** [ <dummyline> | \n ]+ }
 	token keyval    { \s* <key> \s* '=' \s* <value> <comment>? }
-	token key       { [<![;] > \w]+ }
+	token key       { [ <![;]> \w ]+ }
 	token value     { [ <![;]> \N ]+ }
-	token comment   { ';' \N+ }
-	token dummyline { \s* [';' \N*]? \n }
+	token comment   { ';' \N* }
+	token dummyline { \s* <comment>? \n }
 }
 
 our sub parse_file (Str $file) {

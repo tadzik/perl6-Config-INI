@@ -6,6 +6,7 @@ use Config::INI;
 ok 1, 'Config::INI loads';
 
 my $test1 = Q {
+	; comment at the beginning
 foo = bar, asd
 ; comments
 	asd= 7
