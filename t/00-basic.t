@@ -3,13 +3,30 @@ use Test;
 
 use Config::INI;
 
-my $a = Config::INI.new('t/test00.ini');
+ok 1, 'Config::INI loads';
 
-ok $a, 'can parse a file';
+my $test1 = Q {
+foo = bar, asd
+; comments
+	asd= 7
+burp =bump ;another comment
 
-is $a<toplevel><foo>, 'comma, separated, values', '1st key parsed ok';
-is $a<toplevel><ano>, 'ther ', '2nd key parsed ok';
-is $a<toplevel><ki>, 'waliu', '3rd key parsed ok';
-is $a<toplevel><asd>, 'esd', '4th key parsed ok';
+};
+
+my %a = Config::INI::parse($test1);
+
+ok 1, 'can parse a string';
+
+is %a<foo>, 'bar, asd', '1st key parsed ok';
+is %a<asd>, '7', '2nd key parsed ok';
+is %a<burp>, 'bump ', '3rd key parsed ok';
+
+my %b = Config::INI::parse_file('t/test00.ini');
+
+ok 1, 'can parse a file';
+is %b<foo>, 'comma, separated, values', '1st key parsed ok';
+is %b<ano>, 'ther ', '2nd key parsed ok';
+is %b<ki>, 'waliu', '3rd key parsed ok';
+is %b<asd>, 'esd', '4th key parsed ok';
 
 done_testing;
