@@ -1,5 +1,4 @@
 use v6;
-
 module Config::INI;
 
 grammar INIfile {
