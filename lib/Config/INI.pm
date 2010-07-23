@@ -2,26 +2,27 @@ use v6;
 module Config::INI;
 
 grammar INIfile {
-	token TOP       { ^ 
+	token TOP       { 
+						^ 
 						<eol>*
 						<toplevel>?
-						<eol>*
 						<sections>* 
 						<eol>*
 						$
 					}
-	token toplevel  { <keyval> ** [ <eol>+ ] }
-	token sections  { <sheader> <eol>+ <keyval> ** [ <eol>+ ] <eol>+ }
-	token sheader   { '[' (\w+) ']' }
-	token keyval    { \h* <key> \h* '=' \h* <value>? }
-	token key       { [ <![;]> \w ]+ }
+	token toplevel  { <keyval>* }
+	token sections  { <sheader> <keyval>* }
+	token sheader   { \h* '[' ([ \w | \h ]+) ']' <eol> }
+	token keyval    { \h* <key> \h* '=' \h* <value>? <eol> }
+	token key       { <![\[]> <-[;=]>+ }
 	token value     { [ <![;]> \N ]+ }
-	token comment   { \s* ';' \N* }
-	token eol       { <comment>? \n }
-# TBD: Wait for regexes to stabilize, test them one by one
+	token comment   { \h* ';' \N* }
+	token eol       { [<comment>? \n]+ }
 }
 
 our sub parse (Str $conf) {
+# TODO: These .trim all around can definitely be avoided by 
+# tuning the <key>/<value> token
 	my %result;
 	my $match = INIfile.parse($conf);
 	unless $match {
@@ -29,22 +30,23 @@ our sub parse (Str $conf) {
 	}
 	for $match<toplevel>[0]<keyval> -> $param {
 		next unless $param;
-		#say $param.Str.perl,
-		#" becomes ",
-		#$param<key>.Str.perl => $param<value>[0].Str.perl;
 		if $param<value>[0] {
-			%result{$param<key>.Str} = $param<value>[0].Str;
+			%result{$param<key>.Str.trim} = $param<value>.Str.trim;
+			say "Toplevel: '{$param<key>.Str.trim}' => '{$param<value>.Str.trim}'";
 		} else {
-			%result{$param<key>.Str} = '';
+			%result{$param<key>.Str.trim} = '';
+			say "Toplevel: '{$param<key>.Str.trim}' => (null)";
 		}
 	}
 	for $match<sections> -> $section {
 		my $sname = $section<sheader>[0].Str;
 		for $section<keyval> -> $param {
 			if $param<value>[0] {
-				%result{$param<key>.Str} = $param<value>[0].Str;
+				%result{$sname}{$param<key>.Str.trim} = $param<value>[0].Str.trim;
+				say "Section '$sname': '{$param<key>.Str.trim}' => '{$param<value>.Str.trim}'";
 			} else {
-				%result{$param<key>.Str} = '';
+				%result{$sname}{$param<key>.Str.trim} = '';
+				say "Section '$sname': '{$param<key>.Str.trim}' => (null)";
 			}
 		}
 	}
