@@ -56,9 +56,11 @@ our sub parse_file (Str $file) {
 =begin pod
 
 =head1 NAME
+
 Config::INI - parse standard configuration files (.ini files)
 
 =head1 SYNOPSIS
+
 	use Config::INI;
 	my %hash = Config::INI::parse_file('config.ini');
 	#or
