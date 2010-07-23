@@ -32,10 +32,8 @@ our sub parse (Str $conf) {
 		next unless $param;
 		if $param<value>[0] {
 			%result{$param<key>.Str.trim} = $param<value>.Str.trim;
-			say "Toplevel: '{$param<key>.Str.trim}' => '{$param<value>.Str.trim}'";
 		} else {
 			%result{$param<key>.Str.trim} = '';
-			say "Toplevel: '{$param<key>.Str.trim}' => (null)";
 		}
 	}
 	for $match<sections> -> $section {
@@ -43,10 +41,8 @@ our sub parse (Str $conf) {
 		for $section<keyval> -> $param {
 			if $param<value>[0] {
 				%result{$sname}{$param<key>.Str.trim} = $param<value>[0].Str.trim;
-				say "Section '$sname': '{$param<key>.Str.trim}' => '{$param<value>.Str.trim}'";
 			} else {
 				%result{$sname}{$param<key>.Str.trim} = '';
-				say "Section '$sname': '{$param<key>.Str.trim}' => (null)";
 			}
 		}
 	}
