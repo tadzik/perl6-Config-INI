@@ -21,6 +21,24 @@ is %a<foo>, 'bar, asd', '1st key parsed ok';
 is %a<asd>, '7', '2nd key parsed ok';
 is %a<burp>, 'bump', '3rd key parsed ok';
 
+my $emptykeys = Q {
+
+key=
+
+other = ;comment too
+
+[section]
+seckey =
+
+};
+
+my %e = Config::INI::parse($emptykeys);
+
+ok 1, 'emptykeys parse';
+
+ok !(%e<other>), 'empty keys extracted ok, 1/2';
+ok !(%e<section><seckey>), 'empty keys extracted ok, 2/2';
+
 my $comments = Q {
 ; one comment here
 foo=bar ;another one here
@@ -50,9 +68,6 @@ some=thing
 another=thing
 
 [more]
-stuff=good
-dragon=storm
-
 };
 
 my %s = Config::INI::parse($sections);

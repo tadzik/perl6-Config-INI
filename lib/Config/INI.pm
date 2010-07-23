@@ -3,19 +3,22 @@ module Config::INI;
 
 grammar INIfile {
 	token TOP       { ^ 
-						<dummyline>* <toplevel>?
-						<dummyline>* <sections>*
-						<dummyline>*
+						<eol>*
+						<toplevel>?
+						<eol>*
+						<sections>* 
+						<eol>*
 						$
 					}
-	token toplevel  { <keyval> ** <dummyline>* }
-	token sections  { <sheader> <keyval> ** <dummyline>* }
+	token toplevel  { <keyval> ** [ <eol>+ ] }
+	token sections  { <sheader> <eol>+ <keyval> ** [ <eol>+ ] <eol>+ }
 	token sheader   { '[' (\w+) ']' }
-	token keyval    { \s* <key> \s* '=' \s* <value> <dummyline> }
+	token keyval    { \h* <key> \h* '=' \h* <value>? }
 	token key       { [ <![;]> \w ]+ }
 	token value     { [ <![;]> \N ]+ }
-	token comment   { \s* ';' \N* \n }
-	token dummyline { [ <comment> | \n ]+ }
+	token comment   { \s* ';' \N* }
+	token eol       { <comment>? \n }
+# TBD: Wait for regexes to stabilize, test them one by one
 }
 
 our sub parse (Str $conf) {
@@ -26,12 +29,23 @@ our sub parse (Str $conf) {
 	}
 	for $match<toplevel>[0]<keyval> -> $param {
 		next unless $param;
-		%result{$param<key>.Str} = $param<value>.Str
+		#say $param.Str.perl,
+		#" becomes ",
+		#$param<key>.Str.perl => $param<value>[0].Str.perl;
+		if $param<value>[0] {
+			%result{$param<key>.Str} = $param<value>[0].Str;
+		} else {
+			%result{$param<key>.Str} = '';
+		}
 	}
 	for $match<sections> -> $section {
 		my $sname = $section<sheader>[0].Str;
 		for $section<keyval> -> $param {
-			%result{$sname}{$param<key>.Str} = $param<value>.Str;
+			if $param<value>[0] {
+				%result{$param<key>.Str} = $param<value>[0].Str;
+			} else {
+				%result{$param<key>.Str} = '';
+			}
 		}
 	}
 	return %result
@@ -56,9 +70,11 @@ our sub parse_file (Str $file) {
 =begin pod
 
 =head1 NAME
+
 Config::INI - parse standard configuration files (.ini files)
 
 =head1 SYNOPSIS
+
 	use Config::INI;
 	my %hash = Config::INI::parse_file('config.ini');
 	#or
