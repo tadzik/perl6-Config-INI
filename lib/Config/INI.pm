@@ -2,23 +2,27 @@ use v6;
 module Config::INI;
 
 grammar INIfile {
-	token TOP       { ^ 
-						<dummyline>* <toplevel>?
-						<dummyline>* <sections>*
-						<dummyline>*
+	token TOP       { 
+						^ 
+						<eol>*
+						<toplevel>?
+						<sections>* 
+						<eol>*
 						$
 					}
-	token toplevel  { <keyval> ** <dummyline>* }
-	token sections  { <sheader> <keyval> ** <dummyline>* }
-	token sheader   { '[' (\w+) ']' }
-	token keyval    { \s* <key> \s* '=' \s* <value> <dummyline> }
-	token key       { [ <![;]> \w ]+ }
+	token toplevel  { <keyval>* }
+	token sections  { <sheader> <keyval>* }
+	token sheader   { \h* '[' ([ \w | \h ]+) ']' <eol> }
+	token keyval    { \h* <key> \h* '=' \h* <value>? <eol> }
+	token key       { <![\[]> <-[;=]>+ }
 	token value     { [ <![;]> \N ]+ }
-	token comment   { \s* ';' \N* \n }
-	token dummyline { [ <comment> | \n ]+ }
+	token comment   { \h* ';' \N* }
+	token eol       { [<comment>? \n]+ }
 }
 
 our sub parse (Str $conf) {
+# TODO: These .trim all around can definitely be avoided by 
+# tuning the <key>/<value> token
 	my %result;
 	my $match = INIfile.parse($conf);
 	unless $match {
@@ -26,12 +30,20 @@ our sub parse (Str $conf) {
 	}
 	for $match<toplevel>[0]<keyval> -> $param {
 		next unless $param;
-		%result{$param<key>.Str} = $param<value>.Str
+		if $param<value>[0] {
+			%result{$param<key>.Str.trim} = $param<value>.Str.trim;
+		} else {
+			%result{$param<key>.Str.trim} = '';
+		}
 	}
 	for $match<sections> -> $section {
 		my $sname = $section<sheader>[0].Str;
 		for $section<keyval> -> $param {
-			%result{$sname}{$param<key>.Str} = $param<value>.Str;
+			if $param<value>[0] {
+				%result{$sname}{$param<key>.Str.trim} = $param<value>[0].Str.trim;
+			} else {
+				%result{$sname}{$param<key>.Str.trim} = '';
+			}
 		}
 	}
 	return %result
