@@ -102,3 +102,5 @@ without specified value (as in 'foo='). Whether this is a bug
 or a feature, time will tell.
 
 =end pod
+
+# vim: ft=perl6

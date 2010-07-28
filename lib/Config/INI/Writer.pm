@@ -24,3 +24,5 @@ our sub dumpfile (%what, $where) {
 	$fh.print(dump(%what));
 	$fh.close;
 }
+
+# vim: ft=perl6
