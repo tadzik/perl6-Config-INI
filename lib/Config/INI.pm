@@ -1,5 +1,6 @@
 use v6;
-module Config::INI;
+
+module Config::INI:<github:tadzik 0.1>;
 
 grammar INIfile {
 	token TOP       { 

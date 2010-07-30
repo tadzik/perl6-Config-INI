@@ -1,5 +1,6 @@
 use v6;
-module Config::INI::Writer;
+
+module Config::INI::Writer:<github:tadzik 0.1>;
 
 our sub dump (%what) {
 	my $ret;
