@@ -1,3 +1,2 @@
 This module parses the standard configuration files (so called .ini files).
-To see some example usage please take a look at tests, I'll write something
-better once it becomes complete.
+For example usage, see SYNOPSIS in the Pod.
