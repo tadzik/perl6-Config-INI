@@ -1,6 +1,7 @@
 use v6;
-use Test;
 use Config::INI;
+use Test;
+plan 1;
 
 ok 1, 'Loading module succeeded';
 

@@ -1,20 +1,21 @@
 use v6;
-use Test;
 use Config::INI;
 use Config::INI::Writer;
+use Test;
+plan 8;
 
 ok 1, 'Modules loaded';
 
 my %hash =
-	foo => 'bar',
-	another => 'thing',
-	section => {
-		one => 'two',
-		three => 4,
-	},
-	onemore => {
-		why => 'not',
-	};
+    foo => 'bar',
+    another => 'thing',
+    section => {
+        one => 'two',
+        three => 4,
+    },
+    onemore => {
+        why => 'not',
+    };
 
 
 my $str = Config::INI::Writer::dump(%hash);
@@ -25,8 +26,8 @@ my %new = Config::INI::parse($str);
 
 ok 3, 'String parsed';
 
-is %new<foo>, 'bar', 'content ok, 1/5';
-is %new<another>, 'thing', 'content ok, 2/5';
+is %new<_><foo>, 'bar', 'content ok, 1/5';
+is %new<_><another>, 'thing', 'content ok, 2/5';
 is %new<section><one>, 'two', 'content ok, 3/5';
 is %new<section><three>, '4', 'content ok, 4/5';
 is %new<onemore><why>, 'not', 'content ok, 5/5';
