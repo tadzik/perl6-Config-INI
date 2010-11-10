@@ -4,7 +4,6 @@ module Config::INI:<github:tadzik 0.1>;
 
 grammar INI {
     token TOP      { 
-                      
                         <.eol>*
                         <toplevel>?
                         <sections>* 
@@ -22,7 +21,7 @@ grammar INI {
 }
 
 class INI::Actions {
-    method TOP ($/) { make { '_' => $<toplevel>[0].ast, $<sections>».ast } }
+    method TOP ($/) { make { '_' => $<toplevel>[0].ast.hash, $<sections>».ast } }
     method toplevel ($/) { make $<keyval>».ast.hash }
     method sections ($/) { make $<header><text>.Str => $<keyval>».ast.hash }
     # TODO: The .trim is useless, <!after \h> should be added to key regex,
