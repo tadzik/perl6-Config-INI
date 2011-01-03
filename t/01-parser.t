@@ -1,6 +1,6 @@
 use v6;
 use Test;
-plan 30;
+plan 38;
 
 use Config::INI;
 
@@ -109,5 +109,30 @@ is %si<section><blank>, '', '6.5 ok';
 is %si<section><moo>, 'kooh', '6.6 ok';
 is %si{'Section Two'}{'something else'}, 'blah', '6.7 ok';
 is %si{'Section Two'}<remove>, 'whitespace', '6.8 ok';
+
+my $seventh = Q {
+[section]
+one=two
+Foo=Bar
+this=Your Mother!
+blank=
+moo=kooh
+
+[Section Two]
+something else=blah
+ remove = whitespace
+};
+
+my %se = Config::INI::parse($seventh);
+
+ok 1, 'seventh config parsed';
+
+is %si<section><one>, 'two', '7.1 ok';
+is %si<section><Foo>, 'Bar', '7.2 ok';
+is %si<section><this>, 'Your Mother!', '7.3 ok';
+is %si<section><blank>, '', '7.4 ok';
+is %si<section><moo>, 'kooh', '7.5 ok';
+is %si{'Section Two'}{'something else'}, 'blah', '7.6 ok';
+is %si{'Section Two'}<remove>, 'whitespace', '7.7 ok';
 
 done_testing; # and you thougt this would never happen!

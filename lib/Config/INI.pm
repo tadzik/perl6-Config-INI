@@ -21,7 +21,11 @@ grammar INI {
 }
 
 class INI::Actions {
-    method TOP ($/) { make { '_' => $<toplevel>[0].ast.hash, $<sections>».ast } }
+    method TOP ($/) { 
+        my %hash = $<sections>».ast;
+        %hash<_> = $<toplevel>[0].ast.hash if $<toplevel>[0].ast;
+        make %hash;
+    }
     method toplevel ($/) { make $<keyval>».ast.hash }
     method sections ($/) { make $<header><text>.Str => $<keyval>».ast.hash }
     # TODO: The .trim is useless, <!after \h> should be added to key regex,
