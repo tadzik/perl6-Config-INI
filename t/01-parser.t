@@ -135,4 +135,4 @@ is %si<section><moo>, 'kooh', '7.5 ok';
 is %si{'Section Two'}{'something else'}, 'blah', '7.6 ok';
 is %si{'Section Two'}<remove>, 'whitespace', '7.7 ok';
 
-done_testing; # and you thougt this would never happen!
+done; # and you thougt this would never happen!

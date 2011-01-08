@@ -58,6 +58,6 @@ ok 1, 'Modules loaded';
     is %new<onemore><why>, 'not', 'content ok, 3/3';
 }
 
-done_testing;
+done;
 
 # vim: ft=perl6
