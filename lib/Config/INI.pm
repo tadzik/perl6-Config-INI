@@ -4,6 +4,7 @@ module Config::INI;
 
 grammar INI {
     token TOP      { 
+                        ^
                         <.eol>*
                         <toplevel>?
                         <sections>* 
