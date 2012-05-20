@@ -11,7 +11,7 @@ some=thing
 
 my %f = Config::INI::parse($first);
 
-ok 1, 'first config parsed';
+pass, 'first config parsed';
 
 is %f<_><foo>, 'bar', '1.1 ok';
 is %f<_><some>, 'thing', '1.2 ok';
@@ -23,7 +23,7 @@ my $second = Q {
 
 my %s = Config::INI::parse($second);
 
-ok 1, 'second config parsed';
+pass, 'second config parsed';
 
 is %s<_><foo>, 'bar', '2.1 ok';
 is %s<_><some>, 'thing', '2.2 ok';
@@ -35,7 +35,7 @@ my $third = Q {
 
 my %t = Config::INI::parse($third);
 
-ok 1, 'third config parsed';
+pass, 'third config parsed';
 
 is %t<_><foo>, 'bar', '3.1 ok';
 is %t<_><another>, 'thing', '3.2 ok';
@@ -55,7 +55,7 @@ dragon=storm
 
 my %fo = Config::INI::parse($forth);
 
-ok 1, 'forth config parsed';
+pass, 'forth config parsed';
 
 is %fo<_><foo>, 'bar', '4.1 ok';
 is %fo<core><inur>, 'section', '4.2 ok';
@@ -75,7 +75,7 @@ my $fifth = Q {
 
 my %fi = Config::INI::parse($fifth);
 
-ok 1, 'fifth config parsed';
+pass, 'fifth config parsed';
 
 is %fi<_><emptykey>, '', '5.1 ok';
 is %fi<_><another>, 'withvalue', '5.2 ok';
@@ -99,7 +99,7 @@ something else=blah
 
 my %si = Config::INI::parse($sixth);
 
-ok 1, 'sixth config parsed';
+pass, 'sixth config parsed';
 
 is %si<_><root>, 'something', '6.1 ok';
 is %si<section><one>, 'two', '6.2 ok';
@@ -125,7 +125,7 @@ something else=blah
 
 my %se = Config::INI::parse($seventh);
 
-ok 1, 'seventh config parsed';
+pass, 'seventh config parsed';
 
 is %si<section><one>, 'two', '7.1 ok';
 is %si<section><Foo>, 'Bar', '7.2 ok';
