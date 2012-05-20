@@ -84,12 +84,6 @@ would result in the following hash:
 
     { '_' => { foo => "bar" }, section => { another => "thing" } }
 
-=head1 CAVEATS
-
-Parser will fail if a file contains either empty sections, or keys
-without specified value (as in 'foo='). Whether this is a bug
-or a feature, time will tell.
-
 =end pod
 
 # vim: ft=perl6

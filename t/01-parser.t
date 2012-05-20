@@ -1,6 +1,6 @@
 use v6;
 use Test;
-plan 38;
+plan 40;
 
 use Config::INI;
 
@@ -135,4 +135,11 @@ is %si<section><moo>, 'kooh', '7.5 ok';
 is %si{'Section Two'}{'something else'}, 'blah', '7.6 ok';
 is %si{'Section Two'}<remove>, 'whitespace', '7.7 ok';
 
-done; # and you thougt this would never happen!
+my $eight = Q {
+[empty section]
+};
+
+my %ei = Config::INI::parse($eight);
+
+pass 'eight config parsed';
+is_deeply %ei, { 'empty section' => {} };
