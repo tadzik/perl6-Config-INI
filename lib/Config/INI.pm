@@ -13,7 +13,7 @@ grammar INI {
                    }
     token toplevel { <keyval>* }
     token sections { <header> <keyval>* }
-    token header   { ^^ \h* '[' ~ ']' $<text>=[\w | \h]+ \h* <.eol>+ }
+    token header   { ^^ \h* '[' ~ ']' $<text>=<-[ \] \n ]>+ \h* <.eol>+ }
     token keyval   { ^^ \h* <key> \h* '=' \h* <value>? \h* <.eol>+ }
     regex key      { <![\[]> <-[;=]>+ }
     regex value    { [ <![;]> \N ]+ }
