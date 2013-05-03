@@ -24,7 +24,7 @@ grammar INI {
 class INI::Actions {
     method TOP ($/) { 
         my %hash = $<sections>».ast;
-        %hash<_> = $<toplevel>[0].ast.hash if $<toplevel>[0].ast;
+        %hash<_> = $<toplevel>.ast.hash if $<toplevel>.?ast;
         make %hash;
     }
     method toplevel ($/) { make $<keyval>».ast.hash }
