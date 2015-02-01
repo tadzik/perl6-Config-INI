@@ -34,15 +34,8 @@ ok 1, 'Modules loaded';
     is %new<onemore><why>, 'not', 'content ok, 5/5';
 }
 {
-    my %hash = {
-        section => {
-            one => 'two',
-            three => 4,
-        },
-        onemore => {
-            why => 'not',
-        }
-    };
+    my %hash = section => { one => 'two', three => 4, },
+               onemore => { why => 'not' };
     my $str = Config::INI::Writer::dump(%hash);
 
     ok 1, 'String dumped';
