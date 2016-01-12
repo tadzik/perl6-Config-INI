@@ -16,7 +16,7 @@ grammar INI {
     token header   { ^^ \h* '[' ~ ']' $<text>=<-[ \] \n ]>+ \h* <.eol>+ }
     token keyval   { ^^ \h* <key> \h* '=' \h* <value>? \h* <.eol>+ }
     regex key      { <![#\[]> <-[;=]>+ }
-    regex value    { [ <![;]> \N ]+ }
+    regex value    { [ <![#;]> \N ]+ }
     # TODO: This should be just overriden \n once Rakudo implements it
     token eol      { [ <[#;]> \N+ ]? \n }
 }
